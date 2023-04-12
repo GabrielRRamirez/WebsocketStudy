@@ -1,0 +1,29 @@
+version: '3.9'
+
+services:
+  mongodb:
+    image: mongo
+    volumes:
+      - './db/:/data/db'
+    networks:
+      - estudo_websocket
+    ports:
+      - '27018:27017'
+    container_name: 'database_mongodb'
+
+  nodejs:
+    image: node:16.19-alpine
+    volumes:
+      - './:/usr/app/node'
+    networks:
+      - estudo_websocket
+    ports:
+      - '3000:$APPLICATION_PORT'
+    depends_on:
+      - mongodb
+    container_name: 'node_websockets'
+    command: 'npm --prefix /usr/app/node/ run dev'
+
+networks:
+  estudo_websocket:
+    driver: bridge
